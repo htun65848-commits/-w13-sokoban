@@ -129,7 +129,18 @@ def push_crate(board, crate_position, vector):
     デモ版の辞書キー boxes と、演習版の crates は異なる。
     """
     # TODO 3: 箱の行き先を調べ、移動可能なら crates を更新する
-    return False
+    destination = next_position(crate_position, vector)
+
+    if not can_enter(board, destination):
+        return False
+
+    if destination in board["crates"]:
+        return False
+
+    board["crates"].remove(crate_position)
+    board["crates"].add(destination)
+
+    return True
 
 
 def apply_move(board, direction_key):
@@ -152,12 +163,20 @@ def apply_move(board, direction_key):
        
 
     # TODO 1: プレイヤーの移動
+        
+
     destination = next_position(board["hero"], vector)
 
     if not can_enter(board, destination):
         return False
 
-    board["past"].append((board["hero"], board["crates"].copy()))
+    old_crates = board["crates"].copy()
+
+    if destination in board["crates"]:
+        if not push_crate(board, destination, vector):
+            return False
+
+    board["past"].append((board["hero"], old_crates))
     board["hero"] = destination
     board["steps"] += 1
 
