@@ -118,7 +118,7 @@ def can_enter(board, destination):
     デモ版では walls という名前だが、演習版では solid に入っている。
     """
     # TODO 2: 条件を実装する（現状では壁も通過できる）
-    return in_field(board, destination)
+    return in_field(board, destination) and destination not in board["solid"]
 
 
 def push_crate(board, crate_position, vector):
@@ -154,7 +154,7 @@ def apply_move(board, direction_key):
     # TODO 1: プレイヤーの移動
     destination = next_position(board["hero"], vector)
 
-    if not in_field(board, destination):
+    if not can_enter(board, destination):
         return False
 
     board["past"].append((board["hero"], board["crates"].copy()))
